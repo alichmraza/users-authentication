@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>link</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyA8T5EWqt4CIu6nKwn_gVtKzIkBOmTl-Oc",
+            authDomain: "user-authentication-a8490.firebaseapp.com",
+            databaseURL: "https://user-authentication-a8490.firebaseio.com",
+            projectId: "user-authentication-a8490",
+            storageBucket: "",
+            messagingSenderId: "247016688366"
+        };
+        firebase.initializeApp(config);
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col s6">
+            <div class="card">
+                <input type="text" placeholder="name" id="name"><br>
+                <input type="number" placeholder="age" id="age"><br>
+                <input type="email" placeholder="email" id="email"><br>
+                <input type="password" placeholder="password" id="password"><br>
+                <button class="waves-effect waves-light btn" onclick="signIn()">Sign In</button>
+            </div>
+        </div>
+        <div class="col s6">
+            <div class="card">
+                <input type="email" placeholder="email" id="gmail"><br>
+                <input type="password" placeholder="password" id="pasword"><br>
+                <button class="waves-effect waves-light btn" onclick="signUp()">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+<script>
+    var age = document.getElementById('age');
+    var email = document.getElementById('email');
+    var username = document.getElementById('name');
+    var password = document.getElementById('password');
+    var pasword = document.getElementById('pasword');
+    var gmail = document.getElementById('gmail');
+
+    var db = firebase.firestore();
+    db.settings({
+        timestampsInSnapshots: true
+    });
+
+
+    function signUp() {
+        firebase.auth().createUserWithEmailAndPassword(gmail.value, pasword.value).then(function (user) {
+            console.log(user);
+            saveUser(user);
+        }).catch(function (error) {
+            console.log(error);
+            alert(error.message);
+        });
+    }
+
+    function signIn() {
+        firebase.auth().createUserWithEmailAndPassword(email.value, password.value).then(function (user) {
+            console.log(user);
+        }).catch(function (error) {
+            console.log(error);
+            alert(error.message);
+        });
+    }
+    function saveUser(data) {
+        var o = {
+            age: age.value,
+            name: username.value,
+            email: email.value,
+            createAt: Date.now(),
+            userID: data.user.uid,
+
+        };
+        console.log(o);
+        db.collection('users').doc(o.userID).set(o);
+    }
+
+
+</script>
+</body>
+</html>
